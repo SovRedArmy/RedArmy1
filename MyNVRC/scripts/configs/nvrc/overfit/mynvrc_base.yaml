@@ -1,0 +1,14 @@
+epochs: 360
+eval_epochs: 30
+warmup_epochs: 30
+rate_steps: 8
+log_epochs: -2
+opt: adam
+lr: 2e-3
+warmup_lr: 1e-5
+min_lr: 1e-4
+max_norm: 1.0
+weight_decay: 1e-6
+weight_decay_scaling: true
+auto_lr_scaling: true# 模块 C：宽 base 模型整段训练（intra_period -1 = 全视频单 GoP）
+intra_period: -1

@@ -1,0 +1,39 @@
+# datasets / caches / outputs / checkpoints
+cache/
+output/
+outputs/
+checkpoints/
+checkpoint/
+train_result/
+test_data/
+logs/
+logs_*
+log/
+runs/
+wandb/
+data/
+datasets/
+*.npy
+*.npz
+*.pth
+*.pth.tar
+*.pt
+*.ckpt
+*.bin
+*.h5
+*.hdf5
+# media / archives
+*.mp4
+*.yuv
+*.avi
+*.mkv
+*.tar
+*.tar.gz
+*.zip
+*.7z
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.git_bak/
+*.log

@@ -1,0 +1,25 @@
+epochs: 360
+eval_epochs: 30
+warmup_epochs: 30
+rate_steps: 8
+log_epochs: -2
+opt: adam
+lr: 2e-3
+warmup_lr: 1e-5
+min_lr: 1e-4
+max_norm: 1.0
+weight_decay: 1e-6
+weight_decay_scaling: true
+auto_lr_scaling: true# MyHiNeRV 迁移（模块 A）：动态加权采样 + 保守损失权重 + 余弦窗口
+dyn_enabled: true
+dyn_update_epochs: 5
+dyn_warmup_epochs: 10
+dyn_sampling_temp: 1.0
+dyn_sampling_w_min: 1.0
+dyn_sampling_w_max: 1.0
+dyn_loss_alpha: 0.6
+dyn_loss_clip: 0.2
+dyn_window: 10
+dyn_var_weight: 2.0
+sampling_window: "0.2,0.35,0.65,0.85"
+# N1b 仅损失 α=0.6, 采样均匀

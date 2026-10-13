@@ -1,0 +1,1 @@
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3M --tag v3_M_k50 --outf runs --lambda-probe-epochs 0 --delta-keep 0.5

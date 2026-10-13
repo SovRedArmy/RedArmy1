@@ -1,0 +1,10 @@
+__pycache__/
+cache/
+runs/
+logs/
+*.npy
+*.npz
+nohup.out
+runs_smoke2/
+runs_v2smoke/
+report_build/

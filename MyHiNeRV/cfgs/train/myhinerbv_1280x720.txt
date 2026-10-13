@@ -1,0 +1,12 @@
+--loss 0.7 l1 0.3 ms-ssim_5x5
+--train-metric psnr --eval-metric psnr ms-ssim
+--crop-size -1 -1 --input-size 720 1280 --patch-size 1 80 80 --cached patch
+--epochs 300 --eval-epochs 30 --log-epochs -1 --warmup-epochs 30
+--prune-epochs 60 --prune-warmup-epochs 0 --prune-ratio 0.15 --prune-weight 0.5
+--quant-epochs 30 --quant-warmup-epochs 0 --quant-lr-scale 0.1 --quant-level 8 7 6 --quant-noise 0.9
+--opt adam --lr 2e-3 --warmup-lr 2e-5 --min-lr 2e-5 --max-norm 1.0 --auto-lr-scaling true
+--w-fft 0.1 --fft-hf-gamma 0. --w-scale 0.5 --w-flow 0.01 --w-flow-ent 0.001 --w-tcl 0.01
+--tcl-sigma 10. --tcl-tau 0.1 --hf-start 0.5 --hf-beta 1.0
+--dyn-enabled true --dyn-update-epochs 5 --dyn-warmup-epochs 10 --dyn-temperature 0.5 --patch-drop-ratio 0.25
+--base-channels 128 --base-depths 3 3 3 1 --base-exps 4. 4. 4. 1.  (base ≈1.19M ≈ HiNeRV-S/3)
+--p-epochs -1 --p-quant-epochs 30 --clip-len 16 --min-clip-len 12 --max-clip-len 20 --num-clips -1 --aux-ramp-start 0.3 --aux-ramp-len 0.3

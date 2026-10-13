@@ -1,0 +1,38 @@
+{
+  "video": "bunny",
+  "tag": "smoke_base",
+  "mode": "baseline",
+  "preset": "S",
+  "disable": [],
+  "n_frames": 132,
+  "K": 1,
+  "bounds": [
+    0,
+    132
+  ],
+  "clip_target_len": 48,
+  "total_bits": 25212280,
+  "bpp": 0.2072505655513468,
+  "psnr": 21.428192601059422,
+  "msssim": 0.6041483493412242,
+  "psnr_min": 19.800697326660156,
+  "psnr_max": 22.33371925354004,
+  "clips": [
+    {
+      "k": 0,
+      "lo": 0,
+      "hi": 132,
+      "role": "I",
+      "params_m": 3.201905,
+      "bits": 25212280,
+      "psnr": 21.428192601059422,
+      "fps": 56.415402090059004
+    }
+  ],
+  "params_per_clip": [
+    3.201905
+  ],
+  "fps": 56.415402090059004,
+  "wall_s": 101.5990526676178,
+  "huff_ref_bits": null
+}

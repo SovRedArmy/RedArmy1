@@ -1,0 +1,18 @@
+epochs: 360
+eval_epochs: 30
+warmup_epochs: 30
+rate_steps: 8
+log_epochs: -2
+opt: adam
+lr: 2e-3
+warmup_lr: 1e-5
+min_lr: 1e-4
+max_norm: 1.0
+weight_decay: 1e-6
+weight_decay_scaling: true
+auto_lr_scaling: true# 模块 C：clip 级运行（II-init 融合 + 残差参考；base_model_path 由运行脚本注入）
+intra_period: 60
+gop_init_mode: interp
+gop_init_a: 0.6
+gop_init_b: 2.2e-05
+gop_init_c: 0.5

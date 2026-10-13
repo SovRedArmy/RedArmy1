@@ -1,0 +1,10 @@
+bd-metric
+cmake
+matplotlib
+ninja
+numpy
+pillow
+psutil
+pybind11
+scipy
+tqdm

@@ -1,0 +1,40 @@
+# ============================================================
+# 原始 NeRV 基线在 bunny 视频上的实验配置（作为 E-NeRV 的对照）
+# 运行: bash scripts/run.sh ./cfgs/NeRV-bunny.yaml EXP_NAME 29500
+# ============================================================
+seed: 1  # same as the original NeRV repo  随机种子（与原版 NeRV 一致）
+dataset_path: ./data/bunny  # 视频帧目录
+dataset_type: all  # 对应 CustomDataSet
+model:
+  model_name: NeRV  # 对应 model/model_dict 中的 NeRV_Generator
+  pos_b: 1.25   # 帧号位置编码频率底数
+  pos_l: 80     # 帧号位置编码层数，输出维度 160
+  stem_dim_num: '512_1'   # stem MLP: 隐藏宽 512、1 层，最后输出 9*16*112 维（耦合式整帧回归）
+  fc_hw_dim: '9_16_112'   # 初始特征图 高_宽_通道
+  act: gelu
+  stride_list: [5, 2, 2, 2, 2]  # 上采样倍数，最终 720x1280
+  expansion: 1     # 第一阶段通道不扩张
+  reduction: 2     # 后续阶段通道减半（不低于 lower_width）
+  lower_width: 96
+  num_blocks: 1
+  bias: true
+  norm: none
+  conv_type: conv  # conv + PixelShuffle 上采样
+  sin_res: true    # 单分辨率输出
+  sigmoid: true
+
+train_batchsize: 1
+val_batchsize: 1
+workers: 4
+epoch: 300
+optim:
+  optim_type: Adam
+  lr: 0.0005
+  beta1: 0.5
+  beta2: 0.999
+  lr_schedule: warmup_cosine  # warmup + 余弦衰减
+  lr_point: 0.2
+
+loss: Fusion6     # 与 E-NeRV 相同的 0.7*L1 + 0.3*(1-SSIM) 损失，保证公平对比
+print_freq: 50 # every 50 steps in each epoch to print
+eval_freq: 50  # every 50 epochs to conduct evaluation

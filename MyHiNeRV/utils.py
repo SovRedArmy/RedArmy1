@@ -1,0 +1,324 @@
+"""
+通用工具：参数解析、输出目录、accelerator/logger 初始化、
+优化器与调度器构建（基于 timm）、CheckpointManager 与 BestMetricTracker。
+MyHiNeRV 追加：get_logger（多 clip 管线在既定输出目录上复用日志器）。
+"""
+import os
+import shutil
+import argparse
+import yaml
+import copy
+import logging
+import time
+import datetime
+import uuid
+
+import math
+import numpy as np
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch._dynamo as dynamo
+
+import torchvision
+
+import timm
+from timm.optim import create_optimizer_v2, optimizer_kwargs
+from timm.scheduler import create_scheduler_v2, scheduler_kwargs
+
+import accelerate
+
+from models import model_cls
+
+
+"""
+Common settings
+"""
+# 性能相关全局设置：cudnn 自动调优、TF32 矩阵乘精度、dynamo 配置（torch 2.1 兼容）
+torch.backends.cudnn.benchmark = True
+torch.set_float32_matmul_precision('high')
+dynamo.config.verbose = False
+#dynamo.logging.set_loggers_level(logging.FATAL)
+# These are required to make the code work for some cases in torch v2.1
+dynamo.config.automatic_dynamic_shapes = False
+dynamo.config.optimize_ddp = False
+
+
+"""
+Tools
+"""
+def get_ckpt_id():
+    """生成唯一 ID：时间戳 + uuid 前缀。"""
+    return time.strftime('%d-%m-%y_%H%M', time.localtime(time.time())) + '-' + str(uuid.uuid4()).split('-')[0]
+
+
+def str_to_bool(s):
+    """把命令行 'true'/'false' 字符串解析成 bool。"""
+    if s.lower() == 'true':
+        return True
+    elif s.lower() == 'false':
+        return False
+    else:
+        raise ValueError
+
+
+def parse_args(parser):
+    """
+    两阶段解析命令行参数：
+    1) 先 parse_known_args 拿到 --model，调用对应模型的 set_args 动态注册模型专属参数；
+    2) 再完整 parse_args 解析全部参数。
+    """
+    def set_model_args(parser):
+        args_config, remaining = parser.parse_known_args()
+        model_cls[args_config.model].set_args(parser)
+
+    # Set script specific args
+    _, remaining = parser.parse_known_args()
+
+    # Set model specific args
+    set_model_args(parser)
+
+    # Parse both script/model specific args
+    args = parser.parse_args()
+
+    return args
+
+
+def get_output_path(args):
+    """
+    生成输出目录：--exp-name 指定则直接使用，否则由 数据集名-模型-时间戳-uuid 组成；
+    多进程时从 0 号进程广播，保证所有 rank 使用同一目录。
+    """
+    if args.exp_name:
+        exp_name = args.exp_name
+    else:
+        exp_name = '-'.join([
+            args.dataset_name.replace('/', '_').replace(',', '_'),
+            args.model,
+            datetime.datetime.now().strftime("%Y%m%d-%H%M%S"),
+            str(uuid.uuid4()).split('-')[0]
+        ])
+    output_dir = os.path.join(args.output, exp_name) if len(exp_name) else args.output
+    output_dir, = accelerate.utils.broadcast_object_list([output_dir], 0)
+    return output_dir
+
+
+def get_logger(output_dir, accelerator, name=None):
+    """
+    在已存在的输出目录上创建文件+主进程标准输出双路日志器
+    （多 clip 管线用：不重复创建目录，日志统一写入同一路径）。
+    """
+    logger = logging.getLogger(name if name is not None else __name__ + '.' + str(uuid.uuid4())[:8])
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+    if accelerator.num_processes > 1:
+        formatter = logging.Formatter('[%(asctime)s] ' + 'Rank - ' + str(accelerator.process_index) + ' %(levelname)s - %(message)s')
+    else:
+        formatter = logging.Formatter('[%(asctime)s] %(levelname)s - %(message)s')
+    file_handler = logging.FileHandler(filename=os.path.join(output_dir, f'rank_{accelerator.process_index}.txt'))
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    if accelerator.is_main_process:
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(formatter)
+        logger.addHandler(stream_handler)
+    return logger
+
+
+def unwrap_model(model):
+    """剥掉 torch.compile(_orig_mod) 与 DDP(.module) 包装，返回原始模型。"""
+    model = model._orig_mod if hasattr(model, '_orig_mod') else model # For compiled models
+    model = model.module if isinstance(model, nn.parallel.DistributedDataParallel) else model # For DDP models
+    return model
+
+
+"""
+Accerlator & logger
+"""
+def get_accelerator_logger(args):
+    """
+    初始化 accelerate.Accelerator（梯度累积/混合精度/分布式）与 logger：
+    创建输出目录并保存 args.yaml；日志同时写文件（rank_*.txt）与主进程标准输出。
+    """
+    logger = logging.getLogger(__name__)
+    accelerator = accelerate.Accelerator(gradient_accumulation_plugin=accelerate.utils.GradientAccumulationPlugin(num_steps=args.grad_accum, adjust_scheduler=False))
+
+    # Prepare output dir & save configurations
+    output_dir = get_output_path(args)
+    if accelerator.is_main_process:
+        os.makedirs(output_dir, exist_ok=True)
+        with open(os.path.join(output_dir, 'args.yaml'), 'w') as f:
+            f.write(yaml.safe_dump(args.__dict__, default_flow_style=False))
+    accelerator.wait_for_everyone()
+
+    # Log setting
+    if accelerator.num_processes > 1:
+        formatter = logging.Formatter('[%(asctime)s] ' + 'Rank - ' + str(accelerator.process_index) + ' %(levelname)s - %(message)s')
+    else:
+        formatter = logging.Formatter('[%(asctime)s] %(levelname)s - %(message)s')
+    file_handler = logging.FileHandler(filename=os.path.join(output_dir, f'rank_{accelerator.process_index}.txt'))
+    file_handler.setFormatter(formatter)
+    if accelerator.is_main_process:
+        stream_handler = logging.StreamHandler()
+        logger.addHandler(stream_handler)
+
+    logger.addHandler(file_handler)
+    logger.setLevel(logging.INFO)
+
+    # World setting
+    logger.info(f'Torch version: {torch.__version__}')
+    logger.info(f'World size: {accelerator.num_processes}')
+    logger.info(f'Rank: {accelerator.process_index}    Local rank: {accelerator.local_process_index}    Device: {accelerator.device}')
+    if accelerator.device.type == 'cuda':
+        logger.info(f'Device name: {torch.cuda.get_device_name(accelerator.device)}')
+
+    return accelerator, logger, output_dir
+
+
+"""
+Optimizer & scheduler
+"""
+def get_optimizer_scheduler(args, logger, accelerator, model, loader, param_group_fn=None):
+    """
+    用 timm 的 create_optimizer_v2 / create_scheduler_v2 构建优化器与学习率调度器。
+    若开启 auto_lr_scaling，学习率按 相对批大小（等效帧数） 线性缩放，
+    以适配不同的补丁大小/进程数/梯度累积配置。
+    """
+    args = copy.deepcopy(args)
+
+    if args.auto_lr_scaling:
+        # 相对批大小 = batch × 进程数 × 梯度累积 × 补丁面积占比（以 1 帧为基准）
+        relative_batch_size = args.batch_size * accelerator.num_processes * args.grad_accum \
+                                * math.prod(loader.dataset.patch_size[1:]) / math.prod(loader.dataset.video_size[1:])
+        args.lr *= relative_batch_size
+        args.warmup_lr *= relative_batch_size
+        args.min_lr *= relative_batch_size
+        logger.info(f'Autoscale learning rates:')
+        logger.info(f'         lr - {args.lr:.2e}')
+        logger.info(f'         warmup_lr - {args.warmup_lr:.2e}')
+        logger.info(f'         min_lr - {args.min_lr:.2e}')
+
+    args.sched_on_updates = True # This is to match the accelerator option 'step_scheduler_with_optimizer=True'
+
+    optimizer = create_optimizer_v2(model, **optimizer_kwargs(args), param_group_fn=param_group_fn)
+    scheduler, _ = create_scheduler_v2(optimizer, **scheduler_kwargs(args), updates_per_epoch=len(loader))
+    return optimizer, scheduler
+
+
+def set_optimizer_args(parser):
+    """注册优化器/调度器参数（opt/sched/lr/warmup/梯度裁剪/自动 lr 缩放等）。"""
+    group = parser.add_argument_group('Optimizer & scheduler parameters')
+    group.add_argument('--opt', default='sgd', type=str, help='Optimizer')
+    group.add_argument('--opt-eps', default=None, type=float, help='Optimizer Epsilon')
+    group.add_argument('--opt-betas', default=None, type=float, nargs='+', help='Optimizer Betas (default: None, use opt default)')
+    group.add_argument('--momentum', type=float, default=0.9, help='Optimizer momentum (default: 0.9)')
+    group.add_argument('--weight-decay', type=float, default=0.0, help='weight decay (default: 0.0)')
+    group.add_argument('--max-norm', type=float, default=None, help='Maximum gradient norm for clipping')
+    group.add_argument('--norm-type', type=float, default=2.0, help='Gradient norm type for clipping')
+    group.add_argument('--sched', default='cosine', type=str, help='LR scheduler')
+    group.add_argument('--lr', type=float, default=5e-4, help='learning rate')
+    group.add_argument('--warmup-epochs', type=int, default=30, help='epochs to warmup LR, if scheduler supports')
+    group.add_argument('--warmup-lr', type=float, default=5e-5, help='warmup learning rate')
+    group.add_argument('--min-lr', type=float, default=5e-6, help='lower lr bound for cyclic schedulers that hit 0 (5e-6)')
+    group.add_argument('--auto-lr-scaling', type=str_to_bool, default=False,
+                       help='enable linear lr scaling with patch training/distributed training/gradient accumulation, where the base batch size is 1 (in frames).')
+
+
+"""
+Others
+"""
+class CheckpointManager:
+    """
+    检查点管理器：定期保存训练状态（accelerator.save_state 含模型/优化器/调度器），
+    保留最近 n_checkpoints 个滚动检查点，并维护 metric_key 指标最优的 checkpoint_best。
+    """
+    def __init__(self, logger, accelerator, output_dir, metric_key):
+        self.logger = logger
+        self.accelerator = accelerator
+        self.output_dir = output_dir
+        self.best_metric_key = metric_key
+        self.best_metric = -np.inf
+        self.n_checkpoints = 3
+        self.checkpoints = []
+
+    def _save_meta(self, path, data):
+        """把 epoch/指标等元信息写入 meta.yml。"""
+        with open(os.path.join(path, 'meta.yml'), 'w') as file:
+            yaml.dump(data, file)
+
+    def _load_meta(self, path):
+        """读取 meta.yml 元信息。"""
+        with open(os.path.join(path, 'meta.yml'), 'r') as file:
+            data = yaml.safe_load(file)
+        return data
+
+    def save(self, epoch, metrics):
+        """保存当前 epoch 的训练状态；若指标创新高则另存 checkpoint_best。"""
+        # Save the new checkpoint
+        if self.accelerator.is_main_process:
+            new_path = os.path.join(self.output_dir, f'checkpoint_{epoch}')
+            self.accelerator.save_state(output_dir=new_path)
+            self._save_meta(new_path, {'epoch': epoch, 'metric': metrics})
+
+            self.checkpoints.append(new_path)
+            while len(self.checkpoints) > self.n_checkpoints:  # 滚动删除最旧的检查点
+                shutil.rmtree(self.checkpoints.pop(0))
+
+            # Save the best checkpoint
+            if metrics[self.best_metric_key] > self.best_metric:
+                self.best_metric = metrics[self.best_metric_key]
+                best_path = os.path.join(self.output_dir, 'checkpoint_best')
+                self.accelerator.save_state(output_dir=best_path)
+                self._save_meta(best_path, {'epoch': epoch, 'metric': metrics})
+                self.logger.info(f'Saving new best checkpoint: {best_path}')
+
+        self.accelerator.wait_for_everyone()
+
+    def load(self, path):
+        """从检查点恢复训练状态，返回其中记录的 epoch。"""
+        self.accelerator.load_state(path)
+        return self._load_meta(path)['epoch']
+
+
+class BestMetricTracker:
+    """
+    最优指标跟踪器：对每个 key（full/pruned/qat/Q8/Q7/Q6...）跟踪
+    其"尺寸(size 或 bpp)"与最优指标组合，并保存为 txt。
+    """
+    def __init__(self, logger, accelerator, output_dir, size_metric_keys, save_on_main_process=True):
+        assert isinstance(size_metric_keys, dict) and all(isinstance(v, list) and len(v) == 2 for _, v in size_metric_keys.items())
+        self.logger = logger
+        self.accelerator = accelerator
+        self.output_dir = output_dir
+        self.size_metric_keys = size_metric_keys
+        self.size = {}
+        self.best_metric = {}
+        self.save_on_main_process = save_on_main_process
+
+    def update(self, key, size, metrics):
+        """更新某 key 的最优指标（以 size_metric_keys[key][1] 指定的指标为准）并落盘。"""
+        path = os.path.join(self.output_dir, f'{key}.txt')
+        size_key, best_metric_key = self.size_metric_keys[key]
+
+        if best_metric_key not in self.best_metric or metrics[self.best_metric_key] > self.best_metric[best_metric_key]:
+            self.size[key] = size
+            self.best_metric[key] = copy.deepcopy(metrics)
+
+            out_str = ''
+            out_list = [[size_key], [f'{size:.4f}']]
+            for k, v in self.best_metric[key].items():
+                out_str += f'{k}: {v:.4f} '
+                out_list[0].append(k)
+                out_list[1].append(f'{v:.4f}')
+            if size_key == 'size':
+                self.logger.info(f'***        {out_str} @ {size/10**6:.2f}M')
+            elif size_key == 'bpp':
+                self.logger.info(f'***        {out_str} @ {size:.4f}bpp')
+            else:
+                self.logger.info(f'***        {out_str} @ {size:.4f}')
+
+            if self.accelerator.is_main_process or not self.save_on_main_process:
+                os.makedirs(self.output_dir, exist_ok=True)
+                np.savetxt(path, out_list, fmt='%s')
+
+        self.accelerator.wait_for_everyone()

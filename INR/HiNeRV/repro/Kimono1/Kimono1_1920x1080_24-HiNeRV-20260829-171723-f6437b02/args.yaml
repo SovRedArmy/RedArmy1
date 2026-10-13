@@ -1,0 +1,169 @@
+auto_lr_scaling: true
+base_grid_init_scale: 0.001
+base_grid_level: 2
+base_grid_level_scale:
+- 2.0
+- 1.0
+- 1.0
+- 0.5
+base_grid_size:
+- 60
+- -1
+- -1
+- 2
+base_size:
+- -1
+- -1
+- -1
+batch_size: 144
+bitstream: ''
+bitstream_q: ''
+block_act: gelu
+block_bias: false
+block_dropout: 0.0
+block_droppath: 0.0
+block_layerscale: 0.0
+block_norm: layernorm-no-affine
+block_type: convnext
+cached: patch
+channels: 280
+channels_min: 1
+channels_reduce: 2.0
+channels_reduce_base: 1
+crop_size:
+- -1
+- -1
+dataset: /remote-home/share/HEVC_ClassB
+dataset_name: Kimono1_1920x1080_24
+debug: false
+depths:
+- 3
+- 3
+- 3
+- 1
+enc_align_corners: false
+enc_grid_depth_scale:
+- 1.0
+- 0.5
+enc_grid_init_scale: 0.001
+enc_grid_level: 3
+enc_grid_level_scale:
+- 2.0
+- 0.5
+enc_grid_size:
+- -1
+- 4
+enc_pe:
+- 1.2
+- 60
+- 1.2
+- 60
+enc_pe_no_t: false
+enc_type: normalized+temp_local_grid
+epochs: 300
+eval_batch_size: 1
+eval_epochs: 30
+eval_metric:
+- psnr
+- ms-ssim
+eval_only: false
+eval_patch_size: null
+exp_name: null
+exps:
+- 4.0
+- 4.0
+- 4.0
+- 1.0
+grad_accum: 1
+head_act: sigmoid
+head_bias: true
+head_dropout: 0.0
+head_droppath: 0.0
+head_layerscale: 0.0
+head_norm: none
+head_type: linear_head
+input_size:
+- 1080
+- 1920
+kernels:
+- 3
+- 3
+- 3
+- 3
+log_epochs: -1
+log_eval: false
+loss:
+- '0.7'
+- l1
+- '0.3'
+- ms-ssim_5x5
+lr: 0.002
+max_norm: 1.0
+min_lr: 2.0e-05
+model: HiNeRV
+momentum: 0.9
+norm_type: 2.0
+opt: adam
+opt_betas: null
+opt_eps: null
+output: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/Kimono1
+paddings:
+- -1
+- -1
+- -1
+patch_size:
+- 1
+- 120
+- 120
+pin_mem: true
+profile: false
+prune_epochs: 60
+prune_lr_scale: 1.0
+prune_ratio: 0.15
+prune_warmup_epochs: 0
+prune_weight: 0.5
+quant_epochs: 30
+quant_level:
+- 8
+- 7
+- 6
+quant_lr_scale: 0.1
+quant_noise: 0.9
+quant_ste: false
+quant_warmup_epochs: 0
+reg: []
+resume: ''
+scales_hw:
+- 5
+- 3
+- 2
+- 2
+scales_t:
+- 1
+- 1
+- 1
+- 1
+sched: cosine
+seed: 0
+stem_act: none
+stem_bias: true
+stem_dropout: 0.0
+stem_droppath: 0.0
+stem_kernels: 3
+stem_layerscale: 0.0
+stem_norm: none
+stem_paddings:
+- -1
+- -1
+- -1
+stem_type: conv_stem
+train_metric:
+- psnr
+upsample_act: none
+upsample_config: matmul-th-w
+upsample_norm: layernorm-no-affine
+upsample_type: trilinear
+warmup_epochs: 30
+warmup_lr: 2.0e-05
+weight_decay: 0.0
+workers: 2

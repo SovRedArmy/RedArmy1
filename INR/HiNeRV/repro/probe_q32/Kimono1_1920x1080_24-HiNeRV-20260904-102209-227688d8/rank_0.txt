@@ -1,0 +1,242 @@
+[2026-09-04 10:22:09,627] INFO - Torch version: 2.1.0+cu121
+[2026-09-04 10:22:09,627] INFO - World size: 1
+[2026-09-04 10:22:09,627] INFO - Rank: 0    Local rank: 0    Device: cuda
+[2026-09-04 10:22:09,631] INFO - Device name: NVIDIA RTX A6000
+[2026-09-04 10:22:09,631] INFO - Output dir: repro/probe_q32/Kimono1_1920x1080_24-HiNeRV-20260904-102209-227688d8
+[2026-09-04 10:22:09,631] INFO - Set seed: 0
+[2026-09-04 10:22:09,632] INFO - VideoRegressionTask:
+[2026-09-04 10:22:09,632] INFO -      Root: repro/probe_q32/Kimono1_1920x1080_24-HiNeRV-20260904-102209-227688d8/train_output
+[2026-09-04 10:22:09,633] INFO -      Losses: ['0.7', 'l1', '0.3', 'ms-ssim_5x5']    Metrics: ['psnr']    Regularization: []
+[2026-09-04 10:22:09,638] INFO -      Training: True
+[2026-09-04 10:22:09,638] INFO -      Log evaulation: False
+[2026-09-04 10:22:09,638] INFO - VideoRegressionTask:
+[2026-09-04 10:22:09,638] INFO -      Root: repro/probe_q32/Kimono1_1920x1080_24-HiNeRV-20260904-102209-227688d8/eval_output
+[2026-09-04 10:22:09,638] INFO -      Losses: ['0.7', 'l1', '0.3', 'ms-ssim_5x5']    Metrics: ['psnr', 'ms-ssim']    Regularization: []
+[2026-09-04 10:22:09,638] INFO -      Training: False
+[2026-09-04 10:22:09,638] INFO -      Log evaulation: False
+[2026-09-04 10:22:09,638] INFO - Create training dataset & loader: /remote-home/share/HEVC_ClassB/Kimono1_1920x1080_24
+[2026-09-04 10:22:22,610] INFO - VideoDataset:
+[2026-09-04 10:22:22,611] INFO -      root: /remote-home/share/HEVC_ClassB    name: Kimono1_1920x1080_24    number of images: 240
+[2026-09-04 10:22:22,611] INFO -      video_size: (240, 1080, 1920)    patch_size: (1, 120, 120)    num_patches: (240, 9, 16)
+[2026-09-04 10:22:22,611] INFO -      cached: image
+[2026-09-04 10:22:22,613] INFO - Create evaluation dataset & loader: /remote-home/share/HEVC_ClassB/Kimono1_1920x1080_24
+[2026-09-04 10:22:35,024] INFO - VideoDataset:
+[2026-09-04 10:22:35,024] INFO -      root: /remote-home/share/HEVC_ClassB    name: Kimono1_1920x1080_24    number of images: 240
+[2026-09-04 10:22:35,024] INFO -      video_size: (240, 1080, 1920)    patch_size: (1, 1080, 1920)    num_patches: (240, 1, 1)
+[2026-09-04 10:22:35,025] INFO -      cached: image
+[2026-09-04 10:22:35,025] INFO - Create model: HiNeRV
+[2026-09-04 10:22:35,732] INFO - Building HiNeRV Encoding with cfg: {'size': (240, 18, 32), 'channels': 6, 'grid_size': [60, 18, 32, 2], 'grid_level': 2, 'grid_level_scale': [2.0, 1.0, 1.0, 0.5], 'grid_init_scale': 0.001}
+[2026-09-04 10:22:35,754] INFO - Building HiNeRV Decoder with cfg: {'input_size': (240, 18, 32), 'input_channels': 6, 'output_size': (240, 1080, 1920), 'output_channels': 3, 'channels': 280, 'channels_reduce': 2.0, 'channels_reduce_base': 1, 'channels_min': 1, 'depths': [3, 3, 3, 1], 'exps': [4.0, 4.0, 4.0, 1.0], 'scales': [[1, 5, 5], [1, 3, 3], [1, 2, 2], [1, 2, 2]], 'stem_kernels': 3, 'kernels': [3, 3, 3, 3], 'stem_paddings': (0, 3, 3), 'paddings': [[0, 6, 6], [0, 6, 6], [0, 4, 4], [0, 1, 1]], 'block_cfg': {'type': 'convnext', 'norm': 'layernorm-no-affine', 'act': 'gelu', 'layerscale': 0.0, 'dropout': 0.0, 'droppath': 0.0, 'bias': False}, 'stem_cfg': {'kernels': 3, 'paddings': [-1, -1, -1], 'type': 'conv_stem', 'norm': 'none', 'act': 'none', 'layerscale': 0.0, 'dropout': 0.0, 'droppath': 0.0, 'bias': True}, 'head_cfg': {'type': 'linear_head', 'norm': 'none', 'act': 'sigmoid', 'layerscale': 0.0, 'dropout': 0.0, 'droppath': 0.0, 'bias': True}, 'enc_cfg': {'type': 'normalized+temp_local_grid', 'align_corners': False, 'pe': [1.2, 60, 1.2, 60], 'pe_no_t': False, 'grid_size': [-1, 4], 'grid_level': 3, 'grid_level_scale': [2.0, 0.5], 'grid_init_scale': 0.001, 'grid_depth_scale': [1.0, 0.5]}, 'upsample_cfg': {'type': 'trilinear', 'config': 'matmul-th-w', 'norm': 'layernorm-no-affine', 'act': 'none'}}
+[2026-09-04 10:22:35,755] INFO - HiNeRV:
+[2026-09-04 10:22:35,758] INFO -      Stage 1:  T1 - 240  H1 - 18  W1 - 32  C1 - 280
+[2026-09-04 10:22:35,758] INFO -                      T2 - 240  H2 - 90  W2 - 160  C2 - 280
+[2026-09-04 10:22:35,758] INFO -                      Depth - 3  Exp - 4.0  Kernel - 3
+[2026-09-04 10:22:35,759] INFO -                      Scale - (1, 5, 5)  Padding - (0, 6, 6)
+[2026-09-04 10:22:35,780] INFO -      Stage 2:  T1 - 240  H1 - 90  W1 - 160  C1 - 280
+[2026-09-04 10:22:35,780] INFO -                      T2 - 240  H2 - 270  W2 - 480  C2 - 140
+[2026-09-04 10:22:35,780] INFO -                      Depth - 3  Exp - 4.0  Kernel - 3
+[2026-09-04 10:22:35,780] INFO -                      Scale - (1, 3, 3)  Padding - (0, 6, 6)
+[2026-09-04 10:22:35,786] INFO -      Stage 3:  T1 - 240  H1 - 270  W1 - 480  C1 - 140
+[2026-09-04 10:22:35,786] INFO -                      T2 - 240  H2 - 540  W2 - 960  C2 - 70
+[2026-09-04 10:22:35,786] INFO -                      Depth - 3  Exp - 4.0  Kernel - 3
+[2026-09-04 10:22:35,786] INFO -                      Scale - (1, 2, 2)  Padding - (0, 4, 4)
+[2026-09-04 10:22:35,789] INFO -      Stage 4:  T1 - 240  H1 - 540  W1 - 960  C1 - 70
+[2026-09-04 10:22:35,789] INFO -                      T2 - 240  H2 - 1080  W2 - 1920  C2 - 35
+[2026-09-04 10:22:35,789] INFO -                      Depth - 1  Exp - 1.0  Kernel - 3
+[2026-09-04 10:22:35,789] INFO -                      Scale - (1, 2, 2)  Padding - (0, 1, 1)
+[2026-09-04 10:22:35,790] INFO -      Output channels: 3
+[2026-09-04 10:22:35,791] INFO - Building HiNeRV with cfg: {'eval_patch_size': None}
+[2026-09-04 10:22:35,792] INFO - Model info:
+[2026-09-04 10:22:35,793] INFO - HiNeRV(
+  (encoding): HiNeRVEncoding(
+    size=(240, 18, 32), channels=6, grid_level=2, grid_sizes=[(60, 18, 32, 2), (30, 18, 32, 4)]
+    (grids): ParameterList(
+        (0): Object of type: FeatureGrid
+        (1): Object of type: FeatureGrid
+      (0): FeatureGrid()
+      (1): FeatureGrid()
+    )
+    (grid_expands): ModuleList(
+      (0-1): 2 x GridTrilinear3D()
+    )
+  )
+  (decoder): HiNeRVDecoder(
+    input_size=(240, 18, 32), input_channels=6, ouput_size=(240, 1080, 1920), output_channels=3
+    (stem): Conv2dBlock(
+      (conv): Conv2d(6, 280, kernel_size=(3, 3), stride=(1, 1), padding=same)
+      (norm): Identity()
+      (act): Identity()
+    )
+    (blocks): ModuleList(
+      (0): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 5, 5), upsample_type=trilinear
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 5, 5), channels=280, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=280, grid_sizes=[(240, 1, 1, 1, 5, 5, 4), (120, 1, 1, 1, 5, 5, 8), (60, 1, 1, 1, 5, 5, 16)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=28, out_features=280, bias=True)
+          )
+        )
+        (2-4): 3 x ConvNeXtBlock(
+          in_features=280, out_features=280, layerscale_init=0.0
+          (dconv): Conv2d(280, 280, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=280, bias=False)
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=280, out_features=1120, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=1120, out_features=280, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (1): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 3, 3), upsample_type=trilinear
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 3, 3), channels=280, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=280, grid_sizes=[(240, 1, 1, 1, 3, 3, 2), (120, 1, 1, 1, 3, 3, 4), (60, 1, 1, 1, 3, 3, 8)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=14, out_features=280, bias=True)
+          )
+        )
+        (2): ConvNeXtBlock(
+          in_features=280, out_features=140, layerscale_init=0.0
+          (dconv): Conv2d(280, 280, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=280, bias=False)
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=280, out_features=560, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=560, out_features=140, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+        (3-4): 2 x ConvNeXtBlock(
+          in_features=140, out_features=140, layerscale_init=0.0
+          (dconv): Conv2d(140, 140, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=140, bias=False)
+          (norm): LayerNorm((140,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=140, out_features=560, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=560, out_features=140, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (2): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 2, 2), upsample_type=trilinear
+          (norm): LayerNorm((140,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 2, 2), channels=140, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=140, grid_sizes=[(240, 1, 1, 1, 2, 2, 1), (120, 1, 1, 1, 2, 2, 2), (60, 1, 1, 1, 2, 2, 4)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=7, out_features=140, bias=True)
+          )
+        )
+        (2): ConvNeXtBlock(
+          in_features=140, out_features=70, layerscale_init=0.0
+          (dconv): Conv2d(140, 140, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=140, bias=False)
+          (norm): LayerNorm((140,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=140, out_features=280, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=280, out_features=70, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+        (3-4): 2 x ConvNeXtBlock(
+          in_features=70, out_features=70, layerscale_init=0.0
+          (dconv): Conv2d(70, 70, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=70, bias=False)
+          (norm): LayerNorm((70,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=70, out_features=280, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=280, out_features=70, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (3): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 2, 2), upsample_type=trilinear
+          (norm): LayerNorm((70,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 2, 2), channels=70, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=70, grid_sizes=[(240, 1, 1, 1, 2, 2, 1), (120, 1, 1, 1, 2, 2, 2), (60, 1, 1, 1, 2, 2, 4)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=7, out_features=70, bias=True)
+          )
+        )
+        (2): ConvNeXtBlock(
+          in_features=70, out_features=35, layerscale_init=0.0
+          (dconv): Conv2d(70, 70, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=70, bias=False)
+          (norm): LayerNorm((70,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=70, out_features=35, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=35, out_features=35, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+    )
+    (head): LinearBlock(
+      (linear): Linear(in_features=35, out_features=3, bias=True)
+      (norm): Identity()
+      (act): Sigmoid()
+    )
+  )
+)
+[2026-09-04 10:22:35,798] INFO - Number of parameters:
+[2026-09-04 10:22:35,799] INFO -     All: 2.85M
+[2026-09-04 10:22:35,800] INFO -     Decoder: 2.71M
+[2026-09-04 10:22:35,800] INFO -     Model: 2.71M
+[2026-09-04 10:22:35,800] INFO -     Encoding: 0.14M
+[2026-09-04 10:22:35,800] INFO -     Upsampling Encoding: 0.00M
+[2026-09-04 10:23:21,105] INFO - MACs: 181.86G
+[2026-09-04 10:23:22,056] INFO - Create scheduler: cosine
+[2026-09-04 10:23:22,057] INFO - Create optimizer & scheduler for main stage
+[2026-09-04 10:23:22,066] INFO - Autoscale learning rates:
+[2026-09-04 10:23:22,066] INFO -          lr - 5.00e-04
+[2026-09-04 10:23:22,067] INFO -          warmup_lr - 5.00e-05
+[2026-09-04 10:23:22,067] INFO -          min_lr - 5.00e-06
+[2026-09-04 10:23:22,069] INFO - Create optimizer & scheduler for prune stage
+[2026-09-04 10:23:22,072] INFO - Autoscale learning rates:
+[2026-09-04 10:23:22,072] INFO -          lr - 5.00e-04
+[2026-09-04 10:23:22,072] INFO -          warmup_lr - 5.00e-05
+[2026-09-04 10:23:22,072] INFO -          min_lr - 5.00e-06
+[2026-09-04 10:23:22,073] INFO - Create optimizer & scheduler for quant stage
+[2026-09-04 10:23:22,073] INFO - Autoscale learning rates:
+[2026-09-04 10:23:22,074] INFO -          lr - 5.00e-05
+[2026-09-04 10:23:22,074] INFO -          warmup_lr - 5.00e-06
+[2026-09-04 10:23:22,074] INFO -          min_lr - 5.00e-07
+[2026-09-04 10:23:22,076] INFO - Restore from training state: repro/Kimono1/Kimono1_1920x1080_24-HiNeRV-20260829-192515-ea487c58/checkpoints/checkpoint_389
+[2026-09-04 10:23:57,632] INFO - Eval - [60/240]    img/s: 1.76    loss: 0.0281    psnr: 33.5360    ms-ssim: 0.9459
+[2026-09-04 10:24:24,793] INFO - Eval - [120/240]    img/s: 1.96    loss: 0.0272    psnr: 33.6257    ms-ssim: 0.9483
+[2026-09-04 10:24:51,853] INFO - Eval - [180/240]    img/s: 2.04    loss: 0.0267    psnr: 33.5180    ms-ssim: 0.9499
+[2026-09-04 10:25:18,854] INFO - Eval - [240/240]    img/s: 2.08    loss: 0.0258    psnr: 33.5923    ms-ssim: 0.9519

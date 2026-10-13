@@ -1,0 +1,81 @@
+train_cfg:
+  train_iters: 10000
+  num_workers: 1
+  seed: 2024
+  # lr: 0.002
+
+  local_pbar: True
+  batchsize: 144
+  # epochs      : 30
+  # local_epochs: 3
+  data_multiple : 10
+  metrics_set: ['mse', 'psnr', 'bpp', 'ms_ssim']
+  
+log_cfg:
+  base_dir: "train_result"
+
+compression_cfg:
+  quant_model_bit : 6
+  quant_embed_bit : 6
+  
+model_cfg:
+  channels: 256
+  channels_reduce: 2.0
+  channels_reduce_base: 1
+  channels_min: 1
+  depths: [3, 3, 3, 1]
+  exps: [4., 4., 4., 1.]
+  stem_kernels: 1
+  kernels: [1, 1, 1, 1]
+  scales_t: [1, 1, 1, 1]
+  scales_hw: [5, 4, 3, 2]
+  stem_paddings: [0, 1, 1]
+  paddings: [0, 1, 1]
+
+  base_size: [600, 9, 16]
+  base_grid_size: [1, 1, 1, 1]
+  base_grid_level: 3
+  base_grid_level_scale: [1.0, 1.0, 1.0, 1.0]
+  base_grid_init_scale: 0.001
+
+
+  block_type: mlp
+  block_norm: layernorm-no-affine
+  block_act: gelu
+  block_layerscale: 0.0
+  block_dropout: 0.0
+  block_droppath: 0.0
+  block_bias: false
+
+  stem_type: conv_stem
+  stem_norm: none
+  stem_act: none
+  stem_layerscale: 0.0
+  stem_dropout: 0.0
+  stem_droppath: 0.0
+  stem_bias: true
+
+  head_type: linear_head
+  head_norm: none
+  head_act: sigmoid
+  head_layerscale: 0.0
+  head_dropout: 0.0
+  head_droppath: 0.0
+  head_bias: true
+
+
+  enc_type: normalized+temp_local_grid
+  enc_align_corners: false
+  enc_pe: [1.2, 60, 1.2, 60]
+  enc_pe_no_t: false
+  enc_grid_size: [1, 1, 1, 1]
+  enc_grid_level: 3
+  enc_grid_level_scale: [1.0, 1.0, 1.0, 1.0]
+  enc_grid_init_scale: 0.001
+  enc_grid_depth_scale: [1.0, 1.0, 1.0, 1.0]
+
+  upsample_type: trilinear
+  upsample_config: matmul-th-w
+  upsample_norm: layernorm-no-affine
+  upsample_act: none
+  eval_patch_size: null

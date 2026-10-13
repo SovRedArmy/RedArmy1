@@ -1,0 +1,22 @@
+[2026-08-29 19:13:05,797] INFO - Torch version: 2.1.0+cu121
+[2026-08-29 19:13:05,797] INFO - World size: 1
+[2026-08-29 19:13:05,797] INFO - Rank: 0    Local rank: 0    Device: cuda
+[2026-08-29 19:13:05,799] INFO - Device name: NVIDIA RTX A6000
+[2026-08-29 19:13:05,800] INFO - Output dir: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/BQTerrace/BQTerrace_1920x1080_60-HiNeRV-20260829-191305-bf51db43
+[2026-08-29 19:13:05,800] INFO - Set seed: 0
+[2026-08-29 19:13:05,802] INFO - VideoRegressionTask:
+[2026-08-29 19:13:05,802] INFO -      Root: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/BQTerrace/BQTerrace_1920x1080_60-HiNeRV-20260829-191305-bf51db43/train_output
+[2026-08-29 19:13:05,802] INFO -      Losses: ['0.7', 'l1', '0.3', 'ms-ssim_5x5']    Metrics: ['psnr']    Regularization: []
+[2026-08-29 19:13:05,802] INFO -      Training: True
+[2026-08-29 19:13:05,802] INFO -      Log evaulation: False
+[2026-08-29 19:13:05,802] INFO - VideoRegressionTask:
+[2026-08-29 19:13:05,802] INFO -      Root: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/BQTerrace/BQTerrace_1920x1080_60-HiNeRV-20260829-191305-bf51db43/eval_output
+[2026-08-29 19:13:05,802] INFO -      Losses: ['0.7', 'l1', '0.3', 'ms-ssim_5x5']    Metrics: ['psnr', 'ms-ssim']    Regularization: []
+[2026-08-29 19:13:05,802] INFO -      Training: False
+[2026-08-29 19:13:05,803] INFO -      Log evaulation: False
+[2026-08-29 19:13:05,803] INFO - Create training dataset & loader: /remote-home/share/HEVC_ClassB/BQTerrace_1920x1080_60
+[2026-08-29 19:14:02,821] INFO - VideoDataset:
+[2026-08-29 19:14:02,822] INFO -      root: /remote-home/share/HEVC_ClassB    name: BQTerrace_1920x1080_60    number of images: 600
+[2026-08-29 19:14:02,822] INFO -      video_size: (600, 1080, 1920)    patch_size: (1, 120, 120)    num_patches: (600, 9, 16)
+[2026-08-29 19:14:02,822] INFO -      cached: image
+[2026-08-29 19:14:02,823] INFO - Create evaluation dataset & loader: /remote-home/share/HEVC_ClassB/BQTerrace_1920x1080_60

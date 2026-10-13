@@ -1,0 +1,4 @@
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3M --tag v4_M_lora8 --outf runs --lambda-probe-epochs 0 --max-epochs 1600 --branch-delta lora --lora-rank 8
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3M --tag v4_M_chain --outf runs --lambda-probe-epochs 0 --max-epochs 1600 --branch-init chain
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3M --tag v4_M_lora4 --outf runs --lambda-probe-epochs 0 --max-epochs 1600 --branch-delta lora --lora-rank 4
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3M --tag v4_M_lora16 --outf runs --lambda-probe-epochs 0 --max-epochs 1600 --branch-delta lora --lora-rank 16

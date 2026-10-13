@@ -1,0 +1,42 @@
+type: NVRC
+config:
+  grid_em:
+    em_dist: gaussian
+    rate_quant: soft-round-noise
+    dist_quant: soft-round-noise
+    quant_mean: true
+    learned_quant: true
+    learned_em: true
+    em: qec
+  weight_em:
+    em_dist: gaussian
+    rate_quant: soft-round-noise
+    dist_quant: soft-round-noise
+    quant_mean: true
+    learned_quant: true
+    learned_em: true
+    em: qec
+  grid_meta_em:
+    em: em
+    em_dist: gaussian
+    rate_quant: soft-round-noise
+    dist_quant: soft-round-noise
+    quant_mean: true
+    learned_quant: true
+    learned_em: true
+  weight_meta_em:
+    em: em
+    em_dist: gaussian
+    rate_quant: soft-round-noise
+    dist_quant: soft-round-noise
+    quant_mean: true
+    learned_quant: true
+    learned_em: true
+  optimize:
+    optimize_rate: true
+    soft_round_temp:
+    - 0.5
+    - 0.3
+    kum_noise:
+    - 2.0
+    - 1.0

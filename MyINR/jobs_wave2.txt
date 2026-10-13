@@ -1,0 +1,16 @@
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/beauty --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/beauty --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bosphorus --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bosphorus --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/honeybee --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/honeybee --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/jockey --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/jockey --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/readysetgo --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/readysetgo --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/shakendry --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/shakendry --mode ours --preset L --tag ours_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/yachtride --mode baseline --preset L --tag base_L --outf runs
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/yachtride --mode ours --preset L --tag ours_L --outf runs

@@ -1,0 +1,57 @@
+
+train_cfg:
+  # lr          : 0.002
+  local_pbar  : True
+  batchsize   : 144
+
+  # epochs        : 15
+  # local_epochs  : 6
+  data_multiple : 100
+  
+compression_cfg:
+  q_mode: 'PQ'
+  q_mode: 'QAT'
+  q_mode: 'QEC'
+
+model_cfg:
+  model: HiNeRV
+
+  block_type: convnext
+  channels: 280
+  channels_reduce: 2.0
+  depths: [3, 3, 3, 1]
+
+  exps: [4., 4., 4., 1.]
+  stem_kernels: 3
+  kernels: [3, 3, 3, 3]
+
+  scales_t: [1, 1, 1, 1]
+  scales_hw: [5, 3, 2, 2]
+  stem_paddings: [-1, -1, -1]
+  paddings: [-1, -1, -1]
+
+  base_size: [-1, -1, -1]
+  base_grid_size: [150, -1, -1, 2]
+  base_grid_level: 2
+  base_grid_level_scale: [2., 1., 1., 0.5]
+  # base_grid_init_scale: 0.001
+  
+  enc_type: normalized+temp_local_grid
+  enc_grid_size: [-1, 4]
+  enc_grid_level: 3
+  enc_grid_level_scale: [2., 0.5]
+  enc_grid_depth_scale: [1., 0.5]
+
+  upsample_type: trilinear
+  upsample_config: matmul-th-w
+
+#------------------------------ UVG -----------------------------
+dataset_cfg:
+  crop_size: [-1, -1]
+  input_size: [1080, 1920]
+  patch_size: [1, 120, 120]
+  cached: patch
+
+
+  crop_list: '960_1920'
+  resize_list: '-1'

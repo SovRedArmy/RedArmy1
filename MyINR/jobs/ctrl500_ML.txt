@@ -1,0 +1,2 @@
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset M --tag ctrl500_M --outf runs --lambda-probe-epochs 0 --max-branches 0
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset L --tag ctrl500_L --outf runs --lambda-probe-epochs 0 --max-branches 0

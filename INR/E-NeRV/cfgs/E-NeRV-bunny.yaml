@@ -1,0 +1,49 @@
+# ============================================================
+# E-NeRV 在 bunny 视频上的实验配置（论文默认设置）
+# 运行: bash scripts/run.sh ./cfgs/E-NeRV-bunny.yaml EXP_NAME 29500
+# ============================================================
+seed: 1  # same as the original NeRV repo  随机种子（与原版 NeRV 一致）
+dataset_path: ./data/bunny  # 视频帧目录（每帧一张 png）
+dataset_type: all  # 数据集类型，对应 datasets/dataset_dict 中的键 -> CustomDataSet
+model:
+  model_name: E_NeRV  # 模型名，对应 model/model_dict 中的键 -> E_NeRV_Generator
+  # pe related
+  pos_b: 1.25        # 帧号位置编码频率底数 b（论文: gamma(t) 的 b）
+  pos_l: 80          # 帧号位置编码层数 l，输出维度 2*80=160
+  xypos_b: 1.25      # xy 坐标位置编码频率底数
+  xypos_l: 80        # xy 坐标位置编码层数，输出维度 2*80=160
+  pos_b_tm: 1.25     # temporal IN 支路（t_branch）专用的位置编码底数（论文: 调低到 1.05 可改善未见帧插值）
+  pos_l_tm: 80       # temporal IN 支路位置编码层数
+  stem_dim_num: '512'    # 时间支路 stem_t 的隐藏层宽度列表
+  fc_hw_dim: '9_16_196'  # 初始特征图 高_宽_通道，解码器由此逐级上采样到 720x1280
+  act: gelu              # 全模型激活函数
+  stride_list: [5, 2, 2, 2, 2]  # 各解码阶段上采样倍数：9x16 -> 45x80 -> 90x160 -> 180x320 -> 360x640 -> 720x1280
+  expansion: 3       # 第一阶段通道扩张倍数：196*3=588
+  reduction: 2       # 后续阶段通道缩减倍数（不低于 lower_width）
+  lower_width: 96    # 最小通道宽度
+  num_blocks: 1      # 每阶段卷积块数（E-NeRV 直接用每阶段 1 块）
+  bias: true         # 卷积/全连接是否带偏置
+  norm: none         # 解码块内归一化类型（temporal IN 在 E_NeRV_Generator 中单独实现，不受此项控制）
+  conv_type: conv    # 上采样卷积类型：conv+PixelShuffle
+  sin_res: true      # 单分辨率输出（只在最后一个阶段接输出头）
+  sigmoid: true      # 输出用 sigmoid 压缩到 [0,1]
+  block_dim: 256     # 时空融合阶段特征维度 d（论文中的 d = d_t）
+  mlp_dim: 128       # TransformerBlock 中 FFN 的隐藏层宽度
+  additional_loss: false       # 辅助损失开关（当前实现的 grad_loss 恒为 0，未启用）
+  additional_loss_weight: 100.0  # 辅助损失权重
+
+train_batchsize: 1   # 训练 batchsize（论文: 逐帧训练，batchsize=1）
+val_batchsize: 1     # 验证 batchsize
+workers: 4           # DataLoader 加载进程数
+epoch: 300           # 每个视频训练的 epoch 数（论文设置）
+optim:
+  optim_type: Adam   # 优化器
+  lr: 0.0005         # 峰值学习率（配合 warmup-cosine 调度）
+  beta1: 0.5         # Adam 一阶动量系数
+  beta2: 0.999       # Adam 二阶动量系数
+  lr_schedule: warmup_cosine  # 学习率调度策略（见 utils/misc.py 的 adjust_lr）
+  lr_point: 0.2      # 前 20% 迭代做 warmup，其后余弦衰减
+
+loss: Fusion6        # 损失函数：0.7*L1 + 0.3*(1-SSIM)（论文公式）
+print_freq: 50 # every 50 steps in each epoch to print  每隔 50 步打印一次训练日志
+eval_freq: 50  # every 50 epochs to conduct evaluation  每隔 50 个 epoch 评估一次（最后 10 个 epoch 每轮都评）

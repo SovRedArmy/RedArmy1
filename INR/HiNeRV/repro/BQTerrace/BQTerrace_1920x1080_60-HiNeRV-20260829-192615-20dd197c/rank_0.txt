@@ -1,0 +1,342 @@
+[2026-08-29 19:26:15,331] INFO - Torch version: 2.1.0+cu121
+[2026-08-29 19:26:15,331] INFO - World size: 1
+[2026-08-29 19:26:15,331] INFO - Rank: 0    Local rank: 0    Device: cuda
+[2026-08-29 19:26:15,332] INFO - Device name: NVIDIA RTX A6000
+[2026-08-29 19:26:15,333] INFO - Output dir: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/BQTerrace/BQTerrace_1920x1080_60-HiNeRV-20260829-192615-20dd197c
+[2026-08-29 19:26:15,333] INFO - Set seed: 0
+[2026-08-29 19:26:15,334] INFO - VideoRegressionTask:
+[2026-08-29 19:26:15,334] INFO -      Root: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/BQTerrace/BQTerrace_1920x1080_60-HiNeRV-20260829-192615-20dd197c/train_output
+[2026-08-29 19:26:15,334] INFO -      Losses: ['0.7', 'l1', '0.3', 'ms-ssim_5x5']    Metrics: ['psnr']    Regularization: []
+[2026-08-29 19:26:15,334] INFO -      Training: True
+[2026-08-29 19:26:15,334] INFO -      Log evaulation: False
+[2026-08-29 19:26:15,334] INFO - VideoRegressionTask:
+[2026-08-29 19:26:15,334] INFO -      Root: /remote-home/gdzj21/VideoCompression/INR/HiNeRV/repro/BQTerrace/BQTerrace_1920x1080_60-HiNeRV-20260829-192615-20dd197c/eval_output
+[2026-08-29 19:26:15,334] INFO -      Losses: ['0.7', 'l1', '0.3', 'ms-ssim_5x5']    Metrics: ['psnr', 'ms-ssim']    Regularization: []
+[2026-08-29 19:26:15,334] INFO -      Training: False
+[2026-08-29 19:26:15,334] INFO -      Log evaulation: False
+[2026-08-29 19:26:15,334] INFO - Create training dataset & loader: /remote-home/share/HEVC_ClassB/BQTerrace_1920x1080_60
+[2026-08-29 19:26:42,127] INFO - VideoDataset:
+[2026-08-29 19:26:42,128] INFO -      root: /remote-home/share/HEVC_ClassB    name: BQTerrace_1920x1080_60    number of images: 600
+[2026-08-29 19:26:42,128] INFO -      video_size: (600, 1080, 1920)    patch_size: (1, 120, 120)    num_patches: (600, 9, 16)
+[2026-08-29 19:26:42,128] INFO -      cached: image
+[2026-08-29 19:26:42,128] INFO - Create evaluation dataset & loader: /remote-home/share/HEVC_ClassB/BQTerrace_1920x1080_60
+[2026-08-29 19:27:08,583] INFO - VideoDataset:
+[2026-08-29 19:27:08,583] INFO -      root: /remote-home/share/HEVC_ClassB    name: BQTerrace_1920x1080_60    number of images: 600
+[2026-08-29 19:27:08,583] INFO -      video_size: (600, 1080, 1920)    patch_size: (1, 1080, 1920)    num_patches: (600, 1, 1)
+[2026-08-29 19:27:08,583] INFO -      cached: image
+[2026-08-29 19:27:08,583] INFO - Create model: HiNeRV
+[2026-08-29 19:27:09,158] INFO - Building HiNeRV Encoding with cfg: {'size': (600, 18, 32), 'channels': 6, 'grid_size': [150, 18, 32, 2], 'grid_level': 2, 'grid_level_scale': [2.0, 1.0, 1.0, 0.5], 'grid_init_scale': 0.001}
+[2026-08-29 19:27:09,169] INFO - Building HiNeRV Decoder with cfg: {'input_size': (600, 18, 32), 'input_channels': 6, 'output_size': (600, 1080, 1920), 'output_channels': 3, 'channels': 280, 'channels_reduce': 2.0, 'channels_reduce_base': 1, 'channels_min': 1, 'depths': [3, 3, 3, 1], 'exps': [4.0, 4.0, 4.0, 1.0], 'scales': [[1, 5, 5], [1, 3, 3], [1, 2, 2], [1, 2, 2]], 'stem_kernels': 3, 'kernels': [3, 3, 3, 3], 'stem_paddings': (0, 3, 3), 'paddings': [[0, 6, 6], [0, 6, 6], [0, 4, 4], [0, 1, 1]], 'block_cfg': {'type': 'convnext', 'norm': 'layernorm-no-affine', 'act': 'gelu', 'layerscale': 0.0, 'dropout': 0.0, 'droppath': 0.0, 'bias': False}, 'stem_cfg': {'kernels': 3, 'paddings': [-1, -1, -1], 'type': 'conv_stem', 'norm': 'none', 'act': 'none', 'layerscale': 0.0, 'dropout': 0.0, 'droppath': 0.0, 'bias': True}, 'head_cfg': {'type': 'linear_head', 'norm': 'none', 'act': 'sigmoid', 'layerscale': 0.0, 'dropout': 0.0, 'droppath': 0.0, 'bias': True}, 'enc_cfg': {'type': 'normalized+temp_local_grid', 'align_corners': False, 'pe': [1.2, 60, 1.2, 60], 'pe_no_t': False, 'grid_size': [-1, 4], 'grid_level': 3, 'grid_level_scale': [2.0, 0.5], 'grid_init_scale': 0.001, 'grid_depth_scale': [1.0, 0.5]}, 'upsample_cfg': {'type': 'trilinear', 'config': 'matmul-th-w', 'norm': 'layernorm-no-affine', 'act': 'none'}}
+[2026-08-29 19:27:09,169] INFO - HiNeRV:
+[2026-08-29 19:27:09,171] INFO -      Stage 1:  T1 - 600  H1 - 18  W1 - 32  C1 - 280
+[2026-08-29 19:27:09,171] INFO -                      T2 - 600  H2 - 90  W2 - 160  C2 - 280
+[2026-08-29 19:27:09,171] INFO -                      Depth - 3  Exp - 4.0  Kernel - 3
+[2026-08-29 19:27:09,171] INFO -                      Scale - (1, 5, 5)  Padding - (0, 6, 6)
+[2026-08-29 19:27:09,196] INFO -      Stage 2:  T1 - 600  H1 - 90  W1 - 160  C1 - 280
+[2026-08-29 19:27:09,196] INFO -                      T2 - 600  H2 - 270  W2 - 480  C2 - 140
+[2026-08-29 19:27:09,196] INFO -                      Depth - 3  Exp - 4.0  Kernel - 3
+[2026-08-29 19:27:09,196] INFO -                      Scale - (1, 3, 3)  Padding - (0, 6, 6)
+[2026-08-29 19:27:09,201] INFO -      Stage 3:  T1 - 600  H1 - 270  W1 - 480  C1 - 140
+[2026-08-29 19:27:09,201] INFO -                      T2 - 600  H2 - 540  W2 - 960  C2 - 70
+[2026-08-29 19:27:09,201] INFO -                      Depth - 3  Exp - 4.0  Kernel - 3
+[2026-08-29 19:27:09,201] INFO -                      Scale - (1, 2, 2)  Padding - (0, 4, 4)
+[2026-08-29 19:27:09,204] INFO -      Stage 4:  T1 - 600  H1 - 540  W1 - 960  C1 - 70
+[2026-08-29 19:27:09,204] INFO -                      T2 - 600  H2 - 1080  W2 - 1920  C2 - 35
+[2026-08-29 19:27:09,204] INFO -                      Depth - 1  Exp - 1.0  Kernel - 3
+[2026-08-29 19:27:09,204] INFO -                      Scale - (1, 2, 2)  Padding - (0, 1, 1)
+[2026-08-29 19:27:09,205] INFO -      Output channels: 3
+[2026-08-29 19:27:09,205] INFO - Building HiNeRV with cfg: {'eval_patch_size': None}
+[2026-08-29 19:27:09,206] INFO - Model info:
+[2026-08-29 19:27:09,206] INFO - HiNeRV(
+  (encoding): HiNeRVEncoding(
+    size=(600, 18, 32), channels=6, grid_level=2, grid_sizes=[(150, 18, 32, 2), (75, 18, 32, 4)]
+    (grids): ParameterList(
+        (0): Object of type: FeatureGrid
+        (1): Object of type: FeatureGrid
+      (0): FeatureGrid()
+      (1): FeatureGrid()
+    )
+    (grid_expands): ModuleList(
+      (0-1): 2 x GridTrilinear3D()
+    )
+  )
+  (decoder): HiNeRVDecoder(
+    input_size=(600, 18, 32), input_channels=6, ouput_size=(600, 1080, 1920), output_channels=3
+    (stem): Conv2dBlock(
+      (conv): Conv2d(6, 280, kernel_size=(3, 3), stride=(1, 1), padding=same)
+      (norm): Identity()
+      (act): Identity()
+    )
+    (blocks): ModuleList(
+      (0): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 5, 5), upsample_type=trilinear
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 5, 5), channels=280, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=280, grid_sizes=[(600, 1, 1, 1, 5, 5, 4), (300, 1, 1, 1, 5, 5, 8), (150, 1, 1, 1, 5, 5, 16)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=28, out_features=280, bias=True)
+          )
+        )
+        (2-4): 3 x ConvNeXtBlock(
+          in_features=280, out_features=280, layerscale_init=0.0
+          (dconv): Conv2d(280, 280, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=280, bias=False)
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=280, out_features=1120, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=1120, out_features=280, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (1): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 3, 3), upsample_type=trilinear
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 3, 3), channels=280, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=280, grid_sizes=[(600, 1, 1, 1, 3, 3, 2), (300, 1, 1, 1, 3, 3, 4), (150, 1, 1, 1, 3, 3, 8)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=14, out_features=280, bias=True)
+          )
+        )
+        (2): ConvNeXtBlock(
+          in_features=280, out_features=140, layerscale_init=0.0
+          (dconv): Conv2d(280, 280, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=280, bias=False)
+          (norm): LayerNorm((280,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=280, out_features=560, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=560, out_features=140, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+        (3-4): 2 x ConvNeXtBlock(
+          in_features=140, out_features=140, layerscale_init=0.0
+          (dconv): Conv2d(140, 140, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=140, bias=False)
+          (norm): LayerNorm((140,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=140, out_features=560, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=560, out_features=140, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (2): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 2, 2), upsample_type=trilinear
+          (norm): LayerNorm((140,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 2, 2), channels=140, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=140, grid_sizes=[(600, 1, 1, 1, 2, 2, 1), (300, 1, 1, 1, 2, 2, 2), (150, 1, 1, 1, 2, 2, 4)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=7, out_features=140, bias=True)
+          )
+        )
+        (2): ConvNeXtBlock(
+          in_features=140, out_features=70, layerscale_init=0.0
+          (dconv): Conv2d(140, 140, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=140, bias=False)
+          (norm): LayerNorm((140,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=140, out_features=280, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=280, out_features=70, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+        (3-4): 2 x ConvNeXtBlock(
+          in_features=70, out_features=70, layerscale_init=0.0
+          (dconv): Conv2d(70, 70, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=70, bias=False)
+          (norm): LayerNorm((70,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=70, out_features=280, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=280, out_features=70, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (3): ModuleList(
+        (0): HiNeRVUpsampler(
+          scale=(1, 2, 2), upsample_type=trilinear
+          (norm): LayerNorm((70,), eps=1e-06, elementwise_affine=False)
+          (act): Identity()
+          (layer): FastTrilinearInterpolation(method=matmul-th-w, align_corners=False)
+        )
+        (1): PositionalEncoder(
+          scale=(1, 2, 2), channels=70, coor_type=normalized, enc_type=temp_local_grid
+          (coor): NormalizedCoordinate(align_corners=False)
+          (enc): TemporalLocalGridEncoding(
+            C=70, grid_sizes=[(600, 1, 1, 1, 2, 2, 1), (300, 1, 1, 1, 2, 2, 2), (150, 1, 1, 1, 2, 2, 4)], grid_level=3, grid_level_scale=(2.0, 1, 1, 0.5), init_scale=0.001, align_corners=False
+            (grids): ModuleList(
+              (0-2): 3 x FeatureGrid()
+            )
+            (linear): Linear(in_features=7, out_features=70, bias=True)
+          )
+        )
+        (2): ConvNeXtBlock(
+          in_features=70, out_features=35, layerscale_init=0.0
+          (dconv): Conv2d(70, 70, kernel_size=(3, 3), stride=(1, 1), padding=same, groups=70, bias=False)
+          (norm): LayerNorm((70,), eps=1e-06, elementwise_affine=False)
+          (fc1): Linear(in_features=70, out_features=35, bias=False)
+          (act): GELU(approximate='none')
+          (dropout1): Dropout(p=0.0, inplace=False)
+          (fc2): Linear(in_features=35, out_features=35, bias=False)
+          (dropout2): Dropout(p=0.0, inplace=False)
+        )
+      )
+    )
+    (head): LinearBlock(
+      (linear): Linear(in_features=35, out_features=3, bias=True)
+      (norm): Identity()
+      (act): Sigmoid()
+    )
+  )
+)
+[2026-08-29 19:27:09,207] INFO - Number of parameters:
+[2026-08-29 19:27:09,208] INFO -     All: 3.19M
+[2026-08-29 19:27:09,208] INFO -     Decoder: 2.84M
+[2026-08-29 19:27:09,208] INFO -     Model: 2.84M
+[2026-08-29 19:27:09,208] INFO -     Encoding: 0.35M
+[2026-08-29 19:27:09,208] INFO -     Upsampling Encoding: 0.00M
+[2026-08-29 19:27:38,409] INFO - MACs: 181.86G
+[2026-08-29 19:27:39,113] INFO - Create scheduler: cosine
+[2026-08-29 19:27:39,114] INFO - Create optimizer & scheduler for main stage
+[2026-08-29 19:27:39,115] INFO - Autoscale learning rates:
+[2026-08-29 19:27:39,115] INFO -          lr - 2.00e-03
+[2026-08-29 19:27:39,115] INFO -          warmup_lr - 2.00e-05
+[2026-08-29 19:27:39,115] INFO -          min_lr - 2.00e-05
+[2026-08-29 19:27:39,119] INFO - Create optimizer & scheduler for prune stage
+[2026-08-29 19:27:39,119] INFO - Autoscale learning rates:
+[2026-08-29 19:27:39,119] INFO -          lr - 2.00e-03
+[2026-08-29 19:27:39,119] INFO -          warmup_lr - 2.00e-05
+[2026-08-29 19:27:39,119] INFO -          min_lr - 2.00e-05
+[2026-08-29 19:27:39,122] INFO - Create optimizer & scheduler for quant stage
+[2026-08-29 19:27:39,122] INFO - Autoscale learning rates:
+[2026-08-29 19:27:39,122] INFO -          lr - 2.00e-04
+[2026-08-29 19:27:39,122] INFO -          warmup_lr - 2.00e-06
+[2026-08-29 19:27:39,123] INFO -          min_lr - 2.00e-06
+[2026-08-29 19:27:39,125] INFO - Start training for 390 epochs.
+[2026-08-29 19:27:39,125] INFO -     Number of training epochs: 300
+[2026-08-29 19:27:39,125] INFO -     Number of pruning fine-tuning epochs: 60
+[2026-08-29 19:27:39,125] INFO -     Number of quant fine-tuning epochs: 30
+[2026-08-29 19:27:39,231] INFO - Start main training for 300 epochs.
+[2026-08-29 19:29:10,022] INFO - Train - Epoch 0 [150/600]    lr: 3.64e-05    img/s: 1.65    loss: 0.2881    psnr: 14.2951
+[2026-08-29 19:30:22,867] INFO - Train - Epoch 0 [300/600]    lr: 5.29e-05    img/s: 1.83    loss: 0.2625    psnr: 15.5778
+[2026-08-29 19:31:34,649] INFO - Train - Epoch 0 [450/600]    lr: 6.94e-05    img/s: 1.91    loss: 0.2425    psnr: 16.6865
+[2026-08-29 19:32:45,966] INFO - Train - Epoch 0 [600/600]    lr: 8.59e-05    img/s: 1.96    loss: 0.2276    psnr: 17.5491
+[2026-08-29 19:33:58,625] INFO - Train - Epoch 1 [150/600]    lr: 1.02e-04    img/s: 2.06    loss: 0.1719    psnr: 20.6073
+[2026-08-29 19:35:10,719] INFO - Train - Epoch 1 [300/600]    lr: 1.19e-04    img/s: 2.07    loss: 0.1680    psnr: 20.7467
+[2026-08-29 19:36:23,086] INFO - Train - Epoch 1 [450/600]    lr: 1.35e-04    img/s: 2.07    loss: 0.1646    psnr: 20.8906
+[2026-08-29 19:37:34,586] INFO - Train - Epoch 1 [600/600]    lr: 1.52e-04    img/s: 2.08    loss: 0.1614    psnr: 21.0045
+[2026-08-29 19:38:46,558] INFO - Train - Epoch 2 [150/600]    lr: 1.68e-04    img/s: 2.08    loss: 0.1455    psnr: 21.6303
+[2026-08-29 19:39:58,554] INFO - Train - Epoch 2 [300/600]    lr: 1.85e-04    img/s: 2.08    loss: 0.1442    psnr: 21.6478
+[2026-08-29 19:41:11,297] INFO - Train - Epoch 2 [450/600]    lr: 2.01e-04    img/s: 2.08    loss: 0.1417    psnr: 21.7285
+[2026-08-29 19:42:22,823] INFO - Train - Epoch 2 [600/600]    lr: 2.18e-04    img/s: 2.08    loss: 0.1389    psnr: 21.8338
+[2026-08-29 19:43:35,240] INFO - Train - Epoch 3 [150/600]    lr: 2.34e-04    img/s: 2.07    loss: 0.1243    psnr: 22.3881
+[2026-08-29 19:44:47,764] INFO - Train - Epoch 3 [300/600]    lr: 2.51e-04    img/s: 2.07    loss: 0.1221    psnr: 22.4831
+[2026-08-29 19:45:59,573] INFO - Train - Epoch 3 [450/600]    lr: 2.67e-04    img/s: 2.08    loss: 0.1198    psnr: 22.5734
+[2026-08-29 19:47:11,914] INFO - Train - Epoch 3 [600/600]    lr: 2.84e-04    img/s: 2.08    loss: 0.1176    psnr: 22.6557
+[2026-08-29 19:48:23,217] INFO - Train - Epoch 4 [150/600]    lr: 3.00e-04    img/s: 2.10    loss: 0.1061    psnr: 23.1125
+[2026-08-29 19:49:34,548] INFO - Train - Epoch 4 [300/600]    lr: 3.17e-04    img/s: 2.10    loss: 0.1043    psnr: 23.1825
+[2026-08-29 19:50:47,522] INFO - Train - Epoch 4 [450/600]    lr: 3.33e-04    img/s: 2.09    loss: 0.1025    psnr: 23.2798
+[2026-08-29 19:51:58,676] INFO - Train - Epoch 4 [600/600]    lr: 3.50e-04    img/s: 2.09    loss: 0.1008    psnr: 23.3635
+[2026-08-29 19:53:09,757] INFO - Train - Epoch 5 [150/600]    lr: 3.66e-04    img/s: 2.11    loss: 0.0913    psnr: 23.8302
+[2026-08-29 19:54:21,069] INFO - Train - Epoch 5 [300/600]    lr: 3.83e-04    img/s: 2.11    loss: 0.0902    psnr: 23.8662
+[2026-08-29 19:55:31,113] INFO - Train - Epoch 5 [450/600]    lr: 3.99e-04    img/s: 2.12    loss: 0.0890    psnr: 23.9428
+[2026-08-29 19:56:39,019] INFO - Train - Epoch 5 [600/600]    lr: 4.16e-04    img/s: 2.14    loss: 0.0880    psnr: 23.9981
+[2026-08-29 19:57:46,537] INFO - Train - Epoch 6 [150/600]    lr: 4.32e-04    img/s: 2.22    loss: 0.0810    psnr: 24.4383
+[2026-08-29 19:58:52,748] INFO - Train - Epoch 6 [300/600]    lr: 4.49e-04    img/s: 2.24    loss: 0.0803    psnr: 24.4283
+[2026-08-29 20:00:02,429] INFO - Train - Epoch 6 [450/600]    lr: 4.65e-04    img/s: 2.21    loss: 0.0793    psnr: 24.4851
+[2026-08-29 20:01:13,693] INFO - Train - Epoch 6 [600/600]    lr: 4.82e-04    img/s: 2.18    loss: 0.0784    psnr: 24.5447
+[2026-08-29 20:02:25,997] INFO - Train - Epoch 7 [150/600]    lr: 4.98e-04    img/s: 2.07    loss: 0.0730    psnr: 24.9001
+[2026-08-29 20:03:40,453] INFO - Train - Epoch 7 [300/600]    lr: 5.15e-04    img/s: 2.04    loss: 0.0722    psnr: 24.9838
+[2026-08-29 20:04:55,387] INFO - Train - Epoch 7 [450/600]    lr: 5.31e-04    img/s: 2.03    loss: 0.0714    psnr: 25.0367
+[2026-08-29 20:06:10,519] INFO - Train - Epoch 7 [600/600]    lr: 5.48e-04    img/s: 2.02    loss: 0.0708    psnr: 25.0808
+[2026-08-29 20:07:25,852] INFO - Train - Epoch 8 [150/600]    lr: 5.64e-04    img/s: 1.99    loss: 0.0667    psnr: 25.4381
+[2026-08-29 20:08:41,264] INFO - Train - Epoch 8 [300/600]    lr: 5.81e-04    img/s: 1.99    loss: 0.0663    psnr: 25.4577
+[2026-08-29 20:09:57,079] INFO - Train - Epoch 8 [450/600]    lr: 5.97e-04    img/s: 1.99    loss: 0.0659    psnr: 25.4959
+[2026-08-29 20:11:17,800] INFO - Train - Epoch 8 [600/600]    lr: 6.14e-04    img/s: 1.95    loss: 0.0655    psnr: 25.5282
+[2026-08-29 20:12:37,047] INFO - Train - Epoch 9 [150/600]    lr: 6.30e-04    img/s: 1.89    loss: 0.0617    psnr: 25.7774
+[2026-08-29 20:13:56,943] INFO - Train - Epoch 9 [300/600]    lr: 6.47e-04    img/s: 1.89    loss: 0.0606    psnr: 25.8704
+[2026-08-29 20:15:14,987] INFO - Train - Epoch 9 [450/600]    lr: 6.63e-04    img/s: 1.90    loss: 0.0599    psnr: 25.9652
+[2026-08-29 20:16:33,964] INFO - Train - Epoch 9 [600/600]    lr: 6.80e-04    img/s: 1.90    loss: 0.0594    psnr: 26.0078
+[2026-08-29 20:18:06,722] INFO - Train - Epoch 10 [150/600]    lr: 6.96e-04    img/s: 1.62    loss: 0.0564    psnr: 26.2787
+[2026-08-29 20:19:41,626] INFO - Train - Epoch 10 [300/600]    lr: 7.13e-04    img/s: 1.60    loss: 0.0560    psnr: 26.3206
+[2026-08-29 20:21:12,758] INFO - Train - Epoch 10 [450/600]    lr: 7.29e-04    img/s: 1.61    loss: 0.0555    psnr: 26.3854
+[2026-08-29 20:22:41,583] INFO - Train - Epoch 10 [600/600]    lr: 7.46e-04    img/s: 1.63    loss: 0.0552    psnr: 26.4264
+[2026-08-29 20:24:13,617] INFO - Train - Epoch 11 [150/600]    lr: 7.62e-04    img/s: 1.63    loss: 0.0527    psnr: 26.7097
+[2026-08-29 20:25:51,136] INFO - Train - Epoch 11 [300/600]    lr: 7.79e-04    img/s: 1.58    loss: 0.0527    psnr: 26.7159
+[2026-08-29 20:27:21,951] INFO - Train - Epoch 11 [450/600]    lr: 7.95e-04    img/s: 1.61    loss: 0.0526    psnr: 26.7289
+[2026-08-29 20:28:52,649] INFO - Train - Epoch 11 [600/600]    lr: 8.12e-04    img/s: 1.62    loss: 0.0525    psnr: 26.7499
+[2026-08-29 20:30:21,060] INFO - Train - Epoch 12 [150/600]    lr: 8.28e-04    img/s: 1.70    loss: 0.0508    psnr: 26.9593
+[2026-08-29 20:31:55,770] INFO - Train - Epoch 12 [300/600]    lr: 8.45e-04    img/s: 1.64    loss: 0.0506    psnr: 26.9737
+[2026-08-29 20:33:23,709] INFO - Train - Epoch 12 [450/600]    lr: 8.61e-04    img/s: 1.66    loss: 0.0505    psnr: 27.0060
+[2026-08-29 20:34:55,927] INFO - Train - Epoch 12 [600/600]    lr: 8.78e-04    img/s: 1.65    loss: 0.0505    psnr: 27.0086
+[2026-08-29 20:36:28,303] INFO - Train - Epoch 13 [150/600]    lr: 8.94e-04    img/s: 1.62    loss: 0.0494    psnr: 27.1277
+[2026-08-29 20:37:56,834] INFO - Train - Epoch 13 [300/600]    lr: 9.11e-04    img/s: 1.66    loss: 0.0491    psnr: 27.1719
+[2026-08-29 20:39:30,161] INFO - Train - Epoch 13 [450/600]    lr: 9.27e-04    img/s: 1.64    loss: 0.0491    psnr: 27.1799
+[2026-08-29 20:40:58,473] INFO - Train - Epoch 13 [600/600]    lr: 9.44e-04    img/s: 1.65    loss: 0.0491    psnr: 27.1866
+[2026-08-29 20:42:28,687] INFO - Train - Epoch 14 [150/600]    lr: 9.60e-04    img/s: 1.66    loss: 0.0475    psnr: 27.3678
+[2026-08-29 20:43:59,037] INFO - Train - Epoch 14 [300/600]    lr: 9.77e-04    img/s: 1.66    loss: 0.0476    psnr: 27.3882
+[2026-08-29 20:45:38,895] INFO - Train - Epoch 14 [450/600]    lr: 9.93e-04    img/s: 1.60    loss: 0.0476    psnr: 27.3918
+[2026-08-29 20:47:17,658] INFO - Train - Epoch 14 [600/600]    lr: 1.01e-03    img/s: 1.58    loss: 0.0475    psnr: 27.4078
+[2026-08-29 20:48:33,166] INFO - Train - Epoch 15 [150/600]    lr: 1.03e-03    img/s: 1.99    loss: 0.0471    psnr: 27.4160
+[2026-08-29 20:49:38,970] INFO - Train - Epoch 15 [300/600]    lr: 1.04e-03    img/s: 2.12    loss: 0.0467    psnr: 27.4992
+[2026-08-29 20:50:50,414] INFO - Train - Epoch 15 [450/600]    lr: 1.06e-03    img/s: 2.12    loss: 0.0466    psnr: 27.5475
+[2026-08-29 20:52:02,550] INFO - Train - Epoch 15 [600/600]    lr: 1.08e-03    img/s: 2.11    loss: 0.0465    psnr: 27.5512
+[2026-08-29 20:53:25,941] INFO - Train - Epoch 16 [150/600]    lr: 1.09e-03    img/s: 1.80    loss: 0.0457    psnr: 27.6728
+[2026-08-29 20:54:38,406] INFO - Train - Epoch 16 [300/600]    lr: 1.11e-03    img/s: 1.92    loss: 0.0461    psnr: 27.5977
+[2026-08-29 20:55:51,290] INFO - Train - Epoch 16 [450/600]    lr: 1.13e-03    img/s: 1.97    loss: 0.0461    psnr: 27.6104
+[2026-08-29 20:57:09,132] INFO - Train - Epoch 16 [600/600]    lr: 1.14e-03    img/s: 1.96    loss: 0.0459    psnr: 27.6487
+[2026-08-29 20:58:23,717] INFO - Train - Epoch 17 [150/600]    lr: 1.16e-03    img/s: 2.01    loss: 0.0448    psnr: 27.8113
+[2026-08-29 20:59:42,069] INFO - Train - Epoch 17 [300/600]    lr: 1.17e-03    img/s: 1.96    loss: 0.0449    psnr: 27.7983
+[2026-08-29 21:00:57,462] INFO - Train - Epoch 17 [450/600]    lr: 1.19e-03    img/s: 1.97    loss: 0.0449    psnr: 27.7916
+[2026-08-29 21:02:13,738] INFO - Train - Epoch 17 [600/600]    lr: 1.21e-03    img/s: 1.97    loss: 0.0448    psnr: 27.8091
+[2026-08-29 21:03:29,811] INFO - Train - Epoch 18 [150/600]    lr: 1.22e-03    img/s: 1.97    loss: 0.0442    psnr: 27.9116
+[2026-08-29 21:04:45,454] INFO - Train - Epoch 18 [300/600]    lr: 1.24e-03    img/s: 1.98    loss: 0.0441    psnr: 27.9061
+[2026-08-29 21:06:00,632] INFO - Train - Epoch 18 [450/600]    lr: 1.26e-03    img/s: 1.98    loss: 0.0441    psnr: 27.9106
+[2026-08-29 21:07:16,433] INFO - Train - Epoch 18 [600/600]    lr: 1.27e-03    img/s: 1.98    loss: 0.0442    psnr: 27.8891
+[2026-08-29 21:08:32,013] INFO - Train - Epoch 19 [150/600]    lr: 1.29e-03    img/s: 1.98    loss: 0.0435    psnr: 28.0112
+[2026-08-29 21:09:47,521] INFO - Train - Epoch 19 [300/600]    lr: 1.31e-03    img/s: 1.99    loss: 0.0434    psnr: 28.0404
+[2026-08-29 21:11:02,630] INFO - Train - Epoch 19 [450/600]    lr: 1.32e-03    img/s: 1.99    loss: 0.0435    psnr: 28.0237
+[2026-08-29 21:12:18,631] INFO - Train - Epoch 19 [600/600]    lr: 1.34e-03    img/s: 1.99    loss: 0.0434    psnr: 28.0328
+[2026-08-29 21:13:35,895] INFO - Train - Epoch 20 [150/600]    lr: 1.36e-03    img/s: 1.94    loss: 0.0429    psnr: 28.0611
+[2026-08-29 21:14:54,167] INFO - Train - Epoch 20 [300/600]    lr: 1.37e-03    img/s: 1.93    loss: 0.0429    psnr: 28.0861
+[2026-08-29 21:16:09,963] INFO - Train - Epoch 20 [450/600]    lr: 1.39e-03    img/s: 1.95    loss: 0.0429    psnr: 28.1019
+[2026-08-29 21:17:24,904] INFO - Train - Epoch 20 [600/600]    lr: 1.41e-03    img/s: 1.96    loss: 0.0428    psnr: 28.1193
+[2026-08-29 21:18:39,949] INFO - Train - Epoch 21 [150/600]    lr: 1.42e-03    img/s: 2.00    loss: 0.0419    psnr: 28.2599
+[2026-08-29 21:19:55,644] INFO - Train - Epoch 21 [300/600]    lr: 1.44e-03    img/s: 1.99    loss: 0.0421    psnr: 28.2236
+[2026-08-29 21:21:11,048] INFO - Train - Epoch 21 [450/600]    lr: 1.46e-03    img/s: 1.99    loss: 0.0421    psnr: 28.2318
+[2026-08-29 21:22:26,855] INFO - Train - Epoch 21 [600/600]    lr: 1.47e-03    img/s: 1.99    loss: 0.0422    psnr: 28.2209
+[2026-08-29 21:23:43,148] INFO - Train - Epoch 22 [150/600]    lr: 1.49e-03    img/s: 1.97    loss: 0.0417    psnr: 28.3018
+[2026-08-29 21:24:59,103] INFO - Train - Epoch 22 [300/600]    lr: 1.50e-03    img/s: 1.97    loss: 0.0417    psnr: 28.2769
+[2026-08-29 21:26:15,382] INFO - Train - Epoch 22 [450/600]    lr: 1.52e-03    img/s: 1.97    loss: 0.0417    psnr: 28.2834
+[2026-08-29 21:27:30,897] INFO - Train - Epoch 22 [600/600]    lr: 1.54e-03    img/s: 1.97    loss: 0.0417    psnr: 28.2907
+[2026-08-29 21:28:46,539] INFO - Train - Epoch 23 [150/600]    lr: 1.55e-03    img/s: 1.98    loss: 0.0411    psnr: 28.3888
+[2026-08-29 21:30:01,475] INFO - Train - Epoch 23 [300/600]    lr: 1.57e-03    img/s: 1.99    loss: 0.0414    psnr: 28.3503
+[2026-08-29 21:31:17,644] INFO - Train - Epoch 23 [450/600]    lr: 1.59e-03    img/s: 1.98    loss: 0.0413    psnr: 28.3562
+[2026-08-29 21:32:33,992] INFO - Train - Epoch 23 [600/600]    lr: 1.60e-03    img/s: 1.98    loss: 0.0413    psnr: 28.3697
+[2026-08-29 21:33:50,052] INFO - Train - Epoch 24 [150/600]    lr: 1.62e-03    img/s: 1.97    loss: 0.0405    psnr: 28.4859
+[2026-08-29 21:35:06,527] INFO - Train - Epoch 24 [300/600]    lr: 1.64e-03    img/s: 1.97    loss: 0.0407    psnr: 28.4722
+[2026-08-29 21:36:23,564] INFO - Train - Epoch 24 [450/600]    lr: 1.65e-03    img/s: 1.96    loss: 0.0406    psnr: 28.4624
+[2026-08-29 21:37:39,763] INFO - Train - Epoch 24 [600/600]    lr: 1.67e-03    img/s: 1.96    loss: 0.0407    psnr: 28.4586

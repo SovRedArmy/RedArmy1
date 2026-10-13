@@ -1,0 +1,3 @@
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/beauty --mode v3 --preset V3B --tag v3_S --outf runs --lambda-probe-epochs 0
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3M --tag v3_M --outf runs --lambda-probe-epochs 0
+env CUDA_VISIBLE_DEVICES=%GPU% /remote-home/gdzj21/envs/nerv/bin/python encode_video.py --data data/bunny --mode v3 --preset V3L --tag v3_L --outf runs --lambda-probe-epochs 0
